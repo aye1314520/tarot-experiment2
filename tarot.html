@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌抽取体验</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .card {
+            width: 180px;
+            height: 250px;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, #8b5a2b, #6b4f22);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #d4a762;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .card-back {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 15px;
+            text-align: left;
+            display: none;
+            overflow-y: auto;
+        }
+        
+        .card-back img {
+            width: 100%;
+            max-height: 130px;
+            object-fit: contain;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .card-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #8b5a2b;
+        }
+        
+        .card-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+        }
+        
+        .interpretation {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            text-align: left;
+            display: none;
+        }
+        
+        .instruction {
+            font-size: 18px;
+            margin: 20px 0;
+            color: #555;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 塔罗牌抽取体验</h1>
+        <p class="subtitle">探索过去、现在与未来的能量状态</p >
+        
+        <!-- 分组信息框已从此处移除 -->
+        
+        <div class="instruction" id="instruction">
+            请按顺序点击三张牌（先点击“过去”，然后“现在”，最后“未来”）
+        </div>
+        
+        <div class="card-container">
+            <!-- 第一张牌：过去 -->
+            <div class="card card-front" id="card1" onclick="flipCard(1)">
+                <div class="card-number">1</div>
+                <div style="font-size: 20px; margin-top: 20px;">过去</div>
+                <div style="margin-top: 10px; font-size: 14px;">点击翻开</div>
+            </div>
+            
+            <!-- 第二张牌：现在 -->
+            <div class="card card-front" id="card2" onclick="flipCard(2)">
+                <div class="card-number">2</div>
+                <div style="font-size: 20px; margin-top: 20px;">现在</div>
+                <div style="margin-top: 10px; font-size: 14px;">点击翻开</div>
+            </div>
+            
+            <!-- 第三张牌：未来 -->
+            <div class="card card-front" id="card3" onclick="flipCard(3)">
+                <div class="card-number">3</div>
+                <div style="font-size: 20px; margin-top: 20px;">未来</div>
+                <div style="margin-top: 10px; font-size: 14px;">点击翻开</div>
+            </div>
+        </div>
+        
+        <!-- 牌背内容（开始时隐藏） -->
+        <div class="card card-back" id="card1-back">
+            < img id="card1-image" src="" alt="过去牌面">
+            <div class="card-title" id="card1-title"></div>
+            <div class="card-text" id="card1-text"></div>
+        </div>
+        
+        <div class="card card-back" id="card2-back">
+            < img id="card2-image" src="" alt="现在牌面">
+            <div class="card-title" id="card2-title"></div>
+            <div class="card-text" id="card2-text"></div>
+        </div>
+        
+        <div class="card card-back" id="card3-back">
+            < img id="card3-image" src="" alt="未来牌面">
+            <div class="card-title" id="card3-title"></div>
+            <div class="card-text" id="card3-text"></div>
+        </div>
+        
+        <!-- 整体解读 -->
+        <div class="interpretation" id="interpretation">
+            <h3>✨ 整体解读</h3>
+            <p id="interpretation-text"></p >
+            <button class="btn" onclick="returnToSurvey()">返回问卷继续</button>
+        </div>
+        
+        <div class="footer">
+            <p>注：本体验仅用于心理学研究，结果不代表真实预测</p >
+        </div>
+    </div>
+
+    <script>
+        // 从网址获取参数（分组依然在后台起作用，只是前端不显示）
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id') || '未指定';
+        const group = urlParams.get('group') || 'positive';
+        
+        // 定义牌组内容（包含图片链接）
+        const cardSets = {
+            positive: {
+                cards: [
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/bei.jpg?raw=true",
+                        title: "过去：圣杯九（正位）",
+                        text: "这张牌代表过去阶段，你在相关领域已经积累了一定的基础与满足感。之前的努力为你带来了积极的反馈和成就感，这为现在的发展奠定了良好的根基。"
+                    },
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/yang.jpg?raw=true",
+                        title: "现在：太阳（正位）",
+                        text: "这张牌显示你目前正处于充满活力与光明的阶段。事情进展顺利，前景明朗，你拥有足够的能量和乐观心态去推进目标。这是一个适合积极行动、展现自我能力的好时机。"
+                    },
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/jie.jpg?raw=true",
+                        title: "未来：世界（正位）",
+                        text: "这张牌预示未来你将达成圆满与整合。你的目标有望顺利实现，并获得应有的回报与成就感。这是一个充满和谐与成功的未来愿景。"
+                    }
+                ],
+                summary: "综合来看，你的目标在过去已打下良好基础，现在正处于积极发展的阶段，未来将迎来圆满成功。这是一个非常积极的信号，鼓励你保持信心，继续努力，抓住眼前的机遇。"
+            },
+            negative: {
+                cards: [
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/jian.jpg?raw=true",
+                        title: "过去：宝剑五（逆位）",
+                        text: "这张牌反映过去阶段，你在相关领域可能经历了一些冲突或挫败。这些经历可能让你感到困惑或失落，对目标的推进产生了一定的阻碍。"
+                    },
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/yue.jpg?raw=true",
+                        title: "现在：月亮（逆位）",
+                        text: "这张牌显示你目前可能处于一种不确定或焦虑的状态。事情的发展方向不够清晰，可能存在一些潜在的阻碍或误解，让你感到困惑与不安。"
+                    },
+                    {
+                        imageUrl: "https://github.com/aye1314520/tarot-experiment/blob/main/image/ta.jpg?raw=true",
+                        title: "未来：塔（逆位）",
+                        text: "这张牌预示未来可能会遇到突如其来的变化或挑战。虽然这可能带来一定的压力，但也提醒你需要提前做好准备，灵活应对可能的变化。"
+                    }
+                ],
+                summary: "整体来看，你的目标在过去遇到了一些阻碍，现在正处在一种不确定的状态中，未来则需要警惕可能的挑战与变化。这是一个需要你谨慎思考、稳扎稳打的阶段，建议多做一些准备与规划。"
+            }
+        };
+        
+        let flippedCards = 0;
+        const currentSet = cardSets[group];
+        
+        function flipCard(cardNumber) {
+            // 确保按顺序翻牌
+            if (cardNumber !== flippedCards + 1) {
+                alert(`请先翻开第 ${flippedCards + 1} 张牌`);
+                return;
+            }
+            
+            const cardFront = document.getElementById(`card${cardNumber}`);
+            const cardBack = document.getElementById(`card${cardNumber}-back`);
+            
+            // 隐藏正面，显示背面
+            cardFront.style.display = 'none';
+            cardBack.style.display = 'block';
+            
+            // 设置牌面内容（图片、标题、文字）
+            document.getElementById(`card${cardNumber}-image`).src = currentSet.cards[cardNumber-1].imageUrl;
+            document.getElementById(`card${cardNumber}-title`).textContent = currentSet.cards[cardNumber-1].title;
+            document.getElementById(`card${cardNumber}-text`).textContent = currentSet.cards[cardNumber-1].text;
+            
+            flippedCards++;
+            
+            // 更新指示
+            if (flippedCards < 3) {
+                document.getElementById('instruction').textContent = 
+                    `请点击第 ${flippedCards + 1} 张牌（${flippedCards === 1 ? '现在' : '未来'}）`;
+            }
+            
+            // 如果三张牌都翻开了，显示整体解读
+            if (flippedCards === 3) {
+                setTimeout(() => {
+                    document.getElementById('interpretation-text').textContent = currentSet.summary;
+                    document.getElementById('interpretation').style.display = 'block';
+                    document.getElementById('instruction').style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        function returnToSurvey() {
+            // === 重要：这里需要替换成你真实的见数问卷链接 ===
+            const baseUrl = "https://www.credamo.cn/s/你的问卷ID"; // 请务必修改此处！
+            
+            // 构造返回链接，带上参数
+            const returnUrl = `${baseUrl}?user=${userId}&completed=1&source=tarot`;
+            
+            // 跳转回见数
+            window.location.href = returnUrl;
+            
+            // 如果跳转失败，显示提示
+            setTimeout(() => {
+                alert("如果页面没有自动跳转，请手动返回问卷继续作答");
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
